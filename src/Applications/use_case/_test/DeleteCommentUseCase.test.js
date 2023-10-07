@@ -20,13 +20,28 @@ describe('DeleteCommentUseCase', () => {
     const mockThreadRepository = new ThreadRepository();
 
     // mocking needed function
-    mockCommentRepository.deleteComment = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(mockDeletedComment));
-    mockThreadRepository.getThreadById = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve('thread-123'));
-    mockCommentRepository.getCommentById = jest
+    mockCommentRepository.deleteComment = jest.fn().mockImplementation(() =>
+      Promise.resolve(
+        new DeletedComment({
+          id: 'comment-123',
+          content: 'testing 123',
+          date: mockDeletedComment.date,
+          owner: 'user-123',
+          thread_id: 'thread-123',
+          deleted_at: mockDeletedComment.deleted_at,
+        })
+      )
+    );
+    mockThreadRepository.getThreadById = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        id: 'thread-123',
+        title: 'sebuah thread',
+        body: 'sebuah body thread',
+        date: '2021-08-08T07:19:09.775Z',
+        username: 'dicoding',
+      })
+    );
+    mockCommentRepository.verifyCommentAvailability = jest
       .fn()
       .mockImplementation(() => Promise.resolve('comment-123'));
     mockCommentRepository.verifyCommentOwner = jest
@@ -54,7 +69,7 @@ describe('DeleteCommentUseCase', () => {
       mockDeletedComment.deleted_at
     );
     expect(mockThreadRepository.getThreadById).toBeCalledWith('thread-123');
-    expect(mockCommentRepository.getCommentById).toBeCalledWith('comment-123');
+    expect(mockCommentRepository.verifyCommentAvailability).toBeCalledWith('comment-123');
     expect(mockCommentRepository.verifyCommentOwner).toBeCalledWith('comment-123', 'user-123');
   });
 });

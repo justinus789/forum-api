@@ -63,7 +63,7 @@ describe('ThreadRepositoryPostgres', () => {
     });
 
     describe('getThreadById', () => {
-      it('should throw InvariantError when thread not found', async () => {
+      it('should throw NotFoundError when thread not found', async () => {
         // Arrange
         const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 
@@ -73,7 +73,7 @@ describe('ThreadRepositoryPostgres', () => {
         );
       });
 
-      it('should return thread id correctly', async () => {
+      it('should return thread object correctly', async () => {
         // Arrange
         const payoad = {
           id: 'thread-321',

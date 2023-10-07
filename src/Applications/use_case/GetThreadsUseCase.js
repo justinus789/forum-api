@@ -7,7 +7,15 @@ class GetThreadsUseCase {
   async execute(thread_id) {
     const thread = await this._threadRepository.getThreadById(thread_id);
     const comments = await this._commentRepository.getCommentsByThreadId(thread_id);
-    thread['comments'] = comments;
+
+    // show deleted comment on content when comment is deleted
+    const modifiedCommentsResult = comments.map((item) => {
+      if (item.deleted_at) item.content = '**komentar telah dihapus**';
+      delete item.deleted_at;
+      return item;
+    });
+
+    thread['comments'] = modifiedCommentsResult;
     return thread;
   }
 }

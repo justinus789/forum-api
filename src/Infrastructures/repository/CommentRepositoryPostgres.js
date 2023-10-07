@@ -40,7 +40,7 @@ class CommentRepositoryPostgres extends CommentRepository {
     return id;
   }
 
-  async getCommentById(comment_id) {
+  async verifyCommentAvailability(comment_id) {
     const query = {
       text: 'SELECT id FROM comments WHERE id = $1',
       values: [comment_id],
@@ -80,13 +80,7 @@ class CommentRepositoryPostgres extends CommentRepository {
       return [];
     }
 
-    const modifiedResult = result.rows.map((item) => {
-      if (item.deleted_at) item.content = '**komentar telah dihapus**';
-      delete item.deleted_at;
-      return item;
-    });
-
-    return modifiedResult;
+    return result.rows;
   }
 }
 

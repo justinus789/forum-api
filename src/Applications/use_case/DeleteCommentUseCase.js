@@ -6,7 +6,7 @@ class DeleteCommentUseCase {
 
   async execute(comment_id, owner, date, thread_id) {
     await this._threadRepository.getThreadById(thread_id);
-    await this._commentRepository.getCommentById(comment_id);
+    await this._commentRepository.verifyCommentAvailability(comment_id);
     await this._commentRepository.verifyCommentOwner(comment_id, owner);
     return this._commentRepository.deleteComment(comment_id, date);
   }
